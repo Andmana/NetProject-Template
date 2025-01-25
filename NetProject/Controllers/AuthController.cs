@@ -44,5 +44,12 @@ namespace NetProject.Controllers
 
             return Json(new { dataResponse = response });
         }
+
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

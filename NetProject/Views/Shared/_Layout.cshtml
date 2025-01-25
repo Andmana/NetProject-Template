@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    int UserId = Context.Session.GetInt32("UserId") ?? 0;
+}
+
+<!DOCTYPE html>
 
 <!-- =========================================================
 * Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
@@ -61,7 +65,7 @@
 
 <body>
     <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-wrapper layout-content-navbar @(UserId == 0 ? "layout-without-menu" : "")">
         <div class="layout-container">
 
             <!-- Menu -->
@@ -140,5 +144,15 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script>
+        function logout() {
+            // Hapus activeTabUrl dan activeTabContent dari sessionStorage
+            sessionStorage.removeItem("activeTabUrl");
+            sessionStorage.removeItem("activeTabContent");
+        }
+        $("#btn_logout").click(function () {
+            logout()
+        });
+    </script>
 </body>
 </html>

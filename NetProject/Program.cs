@@ -1,3 +1,4 @@
+using NetProject.Middlewares;
 using NetProject.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +41,9 @@ app.UseRouting();
 
 
 app.UseAuthorization();
+
+// add middleware session
+ app.UseMiddleware<SessionMiddleware>();
 
 app.MapControllerRoute(
     name: "default",
