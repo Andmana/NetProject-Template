@@ -1,0 +1,5 @@
+﻿.disabled {
+    pointer-events: none; /* Makes the link non-clickable */
+    color: #6c757d !important; /* Muted gray color */
+    cursor: not-allowed; /* Changes the cursor to indicate it's disabled */
+}

@@ -61,6 +61,24 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="~/assets/js/config.js"></script>
+
+
+    <!-- / Layout wrapper -->
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="~/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="~/assets/vendor/libs/popper/popper.js"></script>
+    <script src="~/assets/vendor/js/bootstrap.js"></script>
+    <script src="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="~/assets/vendor/js/menu.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+
+    <!-- SweetAlert -->
+    <script src="~/sweetalert2/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="~/sweetalert2/sweetalert2.min.css"/>
+
+    <link rel="stylesheet" href="~/custom/custom.css"/>
+
 </head>
 
 <body>
@@ -84,6 +102,8 @@
 
                     <div class="container-xxl flex-grow-1 container-p-y">
                         @RenderBody()
+
+
                     </div>
                     <!-- / Content -->
                     <!-- Footer -->
@@ -123,15 +143,24 @@
         <!-- Overlay -->
         <div class="layout-overlay layout-menu-toggle"></div>
     </div>
-    <!-- / Layout wrapper -->
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
-    <script src="~/assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="~/assets/vendor/libs/popper/popper.js"></script>
-    <script src="~/assets/vendor/js/bootstrap.js"></script>
-    <script src="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
 
-    <script src="~/assets/vendor/js/menu.js"></script>
+    <!-- Modal -->
+
+    <div class="modal fade" id="my_modal" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                 <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">@ViewData["Title"]</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modal_body">
+                <!-- Modal Content-->                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- endbuild -->
     <!-- Vendors JS -->
     <script src="~/assets/vendor/libs/apex-charts/apexcharts.js"></script>
@@ -145,6 +174,9 @@
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script>
+        $("#@ViewData["Title"]").addClass("active");
+
+
         function logout() {
             // Hapus activeTabUrl dan activeTabContent dari sessionStorage
             sessionStorage.removeItem("activeTabUrl");
@@ -153,6 +185,24 @@
         $("#btn_logout").click(function () {
             logout()
         });
+
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-end",
+            showConfirmButton: true,
+            timer: 1000,
+            timerProgressBar: true,
+            customClass: {
+                popup: 'custom-toast' // Add a custom class for the toast
+            },
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+
     </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

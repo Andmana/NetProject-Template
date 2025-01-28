@@ -61,26 +61,20 @@
     <ul class="menu-inner py-1">
     <div class="menu-inner-shadow"></div>
         <!-- Dashboard -->
-        <li class="menu-item active">
-            <a href="index.html" class="menu-link">
+        <li id="Home" class="menu-item">
+            <a asp-action="Index" asp-controller="Home" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
 
-        <!-- medicine -->
-        <li class="menu-item">
-            <a href="cards-basic.html" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-collection"></i>
-                <div data-i18n="Basic">Medicines</div>
-            </a>
-        </li>
-        @RoleId
-    @if(RoleId != 1){
-        <li class="menu-item">
-            <a href="tables-basic.html" class="menu-link">
+
+@if(RoleId > 2)
+    {
+        <li id="Role" class="menu-item">
+                <a asp-action="Index" asp-controller="Role" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-table"></i>
-                <div data-i18n="Tables">Medicine Requests</div>
+                <div data-i18n="Tables">Role</div>
             </a>
         </li>
     }
