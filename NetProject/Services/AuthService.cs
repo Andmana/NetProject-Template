@@ -10,7 +10,7 @@ namespace NetProject.Services
 
         private static readonly HttpClient client = new HttpClient();
         private IConfiguration configuration;
-        private readonly ApiResponse response = new();
+        private ApiResponse response = new();
         public string ROUTE_API = "";
 
         public AuthService(IConfiguration _configuration)
@@ -29,9 +29,9 @@ namespace NetProject.Services
             var request = await client.PostAsync($"{ROUTE_API}apiAuth/CheckLogin", content);
 
             string apiResponse = await request.Content.ReadAsStringAsync();
-            ApiResponse data = JsonConvert.DeserializeObject<ApiResponse>(apiResponse)!;
+            ApiResponse response = JsonConvert.DeserializeObject<ApiResponse>(apiResponse)!;
 
-            return data;
+            return response;
         }
     }
 

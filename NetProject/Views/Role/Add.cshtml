@@ -1,0 +1,86 @@
+﻿@using NetProject.ViewModels
+@model ViewRole
+@{
+    ViewData["Title"] = "Tambah Role";
+}
+
+<form asp-action="Add" method="post" id="form_add">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col mb-3">
+                    <label for="name" class="form-label">Nama Role</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name">
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col mb3 d-flex justify-content-end align-items-center gap-3">
+                    <a class="btn btn-ligth fw-bold" asp-controller="Role" asp-action="Index"> Batal</a>
+                    <button type="submit" class="btn btn-info">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+
+    $.validator.addMethod("notOnlySpaces", function (value, element) {
+        return $.trim(value).length > 0; // Returns true if the trimmed value is not empty
+        },
+        "Tidak boleh Kosong");
+
+    $("#form_add").validate({
+        errorClass: "is-invalid text-danger",
+        rules: {
+            name: {
+                required: true,
+                notOnlySpaces : true
+            },
+        },
+        messages: {
+            name: {
+                required: "Masukkan nama kode role",
+            },
+        },
+        submitHandler: function (form) {
+            var dataForm = $(form).serialize()
+            submitAdd(dataForm)
+        }
+    })
+
+    function submitAdd(form) {
+        $.ajax({
+            url: '/Role/Add',
+            type: 'post',
+            data: form,
+            datatype: 'json',
+            success: function (response) {
+                var data = response.dataResponse
+                if (data.success) {
+                    $("#my_modal").modal("hide")
+                    Toast.fire({
+                        icon: "success",
+                        title: data.message
+                    }).then(function () {
+                        window.location.reload()
+                    })
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'warning',
+                        text: response.message
+                    })
+                    return true
+                }
+
+            }, error: function (response) {
+                console.log(response)
+            }
+
+        })
+    }
+</script>

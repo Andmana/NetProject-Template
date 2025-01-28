@@ -1,0 +1,192 @@
+﻿@using NetProject.ViewModels
+@model EntityPagination<ViewRole>
+@{
+    int index = (Model.PageNumber - 1) * ViewBag.currentShowData + 1;
+
+    int UserId = Context.Session.GetInt32("UserId") ?? 1;
+    int RoleId = Context.Session.GetInt32("RoleId") ?? 3;
+
+    ViewData["Title"] = "Role";
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex align-items-center">
+            <h4 class="card-title">@ViewData["Tilte"]</h4>
+            <button id="btn_add" class="btn btn-primary btn-round ms-auto">
+                <i class='bx bx-plus-circle'></i> Tambah Role
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <form asp-action="Index" method="get" id="form_search">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <div class="dataTables_length d-flex justify-content-start align-items-center gap-2" id="add-row_length">
+                        <span> Data :</span>
+                        <label>
+                            <select id="select_show" name="showData" aria-controls="add-row" class="form-control form-control-sm">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                            </select>
+                        </label>
+                        <span> baris. </span>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div id="add-row_filter" class="dataTables_filter d-flex justify-content-end align-items-center gap-3 ">
+                        <div class="input-group input-group-merge" style="max-width:180px">
+                            <span class="input-group-text" id="basic-addon-search31"><i class="bx bx-search"></i></span>
+                            <input type="text" class="form-control" aria-label="Cari..." aria-describedby="basic-addon-search31"
+                                   id="searchTerm" name="searchTerm" placeholder="Cari.." value="@ViewBag.currentSearchTerm">
+                        </div>
+                        <div class="btn rounded-pill btn-icon btn-primary ms-2" style="cursor:pointer" id="btn_search">
+                            <i class='bx bx-search-alt'></i>
+                        </div>
+                        <div id="btn_reset" class="btn rounded-pill btn-icon btn-dark">
+                            <i class='bx bx-reset'></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="col-1">No</th>
+                            <th>
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewBag.namesort"
+                                   asp-route-currentSearchTerm="@ViewBag.currentSearchTerm"
+                                   asp-route-showData="@ViewBag.currentShowData">
+                                    Nama Role
+                                </a>
+                            </th> @if (UserId != 0 && RoleId > 2)
+                            {
+                                <th scope="col" class="col-2">#</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">@if (Model.TotalData == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                <string>Data tidak ada</string>
+                            </td>
+                        </tr>
+                    } @foreach (ViewRole item in Model.Items)
+                    {
+                        <tr>
+                            <th scope="row">@index</th>
+                            <td>
+                                <i class="fab fa-angular fa-lg text-danger me-3"></i>
+                                <strong>@item.Name</strong>
+                            </td>@if (UserId != 0 && RoleId > 2)
+                            {
+                                <td>
+                                        <button class="btn btn-icon btn-dark btn_edit" role="button" dataId="@item.Id">
+                                            <i class='bx bx-edit'></i>
+                                        </button>
+                                        <button class="btn btn-icon btn-danger btn_delete" role="button" dataId="@item.Id">
+                                            <i class='bx bx-trash'></i>
+                                        </button>
+                                </td>
+                            }
+                        </tr>
+                        index++;
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-5 d-flex justify-content-start align-items-center">
+                <div class="dataTables_info" id="add-row_info" role="status" aria-live="polite">
+                    @if (Model.TotalData != 0)
+                    {
+                        <span> Data @((Model.PageNumber - 1) * @ViewBag.currentShowData + 1) - @(index - 1) dari @Model.TotalData data. </span>
+                    }
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-7 d-flex justify-content-end align-items-center">
+                @{
+                    var prevDisabled = Model.HasPreviousPage ? "" : "disabled";
+                    var nextDisabled = Model.HasNextPage ? "" : "disabled";
+
+                } <div class="dataTables_paginate paging_simple_numbers" id="add-row_paginate">
+                    <ul class="pagination">
+                        <li class="page-item bg-light previous">
+                            <a asp-action="Index"
+                               asp-route-sortOrder="@ViewBag.currentSort"
+                               asp-route-pageNumber="@(Model.PageNumber - 1)"
+                               asp-route-showData="@ViewBag.currentShowData"
+                               asp-route-searchTerm="@ViewBag.currentSearchTerm"
+                               class="page-link text-primary @prevDisabled">
+                                <i class='bx bxs-chevron-left'></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            @if (Model.TotalData != 0)
+                            {
+                                <span class="page-link"> Halaman @Model.PageNumber dari @Model.TotalPages </span>
+                            }
+                        </li>
+                        <li class="page-item bg-light next">
+                            <a asp-action="Index"
+                               asp-route-sortOrder="@ViewBag.currentSort"
+                               asp-route-pageNumber="@(Model.PageNumber + 1)"
+                               asp-route-showData="@ViewBag.currentShowData"
+                               asp-route-searchTerm="@ViewBag.currentSearchTerm"
+                               class="page-link text-primary @nextDisabled">
+                                <i class='bx bx-chevron-right'></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#select_show").val("@ViewBag.currentShowData")
+
+    $("#select_show").change(function() {
+        $("#sort_change").val("@ViewBag.currentSort")
+        $("#form_search").submit()
+    })
+
+    $("#btn_add").click(function() {
+        $("#modal_body").empty()
+        $("#modal_body").load("/Role/Add")
+        $("#my_modal").modal("show")
+    })
+
+    $(".btn_edit").click(function() {
+        var id = $(this).attr("dataid")
+        $("#modal_body").empty()
+        $("#modal_body").load("/Role/Edit/" + id)
+        $("#my_modal").modal("show")
+    })
+
+    $("#btn_search").click(function() {
+        $("#sort_change").val("@ViewBag.currentSort")
+        $("#form_search").submit()
+    })
+
+    $("#btn_reset").click(function() {
+        $("#sort_change").val("")
+        $("#searchTerm").val("")
+        $("#form_search").submit()
+    })
+
+    $(".btn_delete").click(function () {
+        var id = $(this).attr("dataid")
+
+        $("#modal_body").empty()
+        $("#modal_body").load("/Role/Delete?id=" + id)
+        $("#my_modal").modal("show")
+    })
+</script>

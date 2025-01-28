@@ -10,6 +10,7 @@ builder.Services.AddControllers();
 
 // Register EmailService for dependency injection
 builder.Services.AddTransient<AuthService>();
+builder.Services.AddTransient<RoleService>();
 
 builder.Services.AddDbContext<NetProjectContext>(option =>
 {

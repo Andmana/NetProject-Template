@@ -1,4 +1,5 @@
-﻿using NetProject.DataModels;
+﻿using Microsoft.EntityFrameworkCore;
+using NetProject.DataModels;
 using NetProject.ViewModels;
 
 namespace NetProject.API.Services
@@ -11,18 +12,19 @@ namespace NetProject.API.Services
             db = _db;
         }
 
-        public async Task<UserAccount> MatchUser(ViewUserAccount request)
+        public async Task<UserAccount?> MatchUser(ViewUserAccount request)
         {
-            UserAccount data = db.UserAccounts.Where(u => u.Email == request.Email && u.Password == u.Password).FirstOrDefault();
+            var data = await db.UserAccounts.Where(u => u.Email == request.Email && u.Password == request.Password).FirstOrDefaultAsync();
             return data;
         }
 
-        public async Task<ViewUserAccount> GetUserDetail(UserAccount request)
+        public async Task<ViewUserAccount?> GetUserDetail(ViewUserAccount request)
         {
-            ViewUserAccount data = (from user in db.UserAccounts
+            ViewUserAccount? data = await (from user in db.UserAccounts
                                     join role in db.Roles
                                     on user.RoleId equals role.Id
-                                    where request.Id == user.Id
+                                    where request.Email == user.Email
+                                    && request.Password == user.Password
                                     select new ViewUserAccount
                                     {
                                         Id = user.Id,
@@ -31,7 +33,7 @@ namespace NetProject.API.Services
                                         Name = user.Name,
                                         Email = user.Email,
 
-                                    }).FirstOrDefault()!;
+                                    }).FirstOrDefaultAsync();
             return data;
         }
     }

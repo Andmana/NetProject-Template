@@ -1,0 +1,71 @@
+﻿@using NetProject.ViewModels
+@model ViewRole
+@{
+    ViewData["Title"] = "Delete Role";
+}
+<form asp-action="SureDelete" method="post" id="form_delete">
+    <div class="card">
+        <div class="card-body">
+            <input type="hidden" id="id" name="id" value="@Model.Id" />
+
+            <div class="row">
+                <div class="col mb-3">
+                    <figure class="text-center mt-2">
+                        <blockquote class="blockquote">
+                            <p class="mb-0">DApakah kamu yakin, manghapus role <strong>@Model.Name</strong>?</p>
+                        </blockquote>
+                    </figure>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col mb3 d-flex justify-content-end align-items-center gap-3">
+                    <a class="btn btn-ligth fw-bold" asp-controller="Role" asp-action="Index"> Batal</a>
+                    <button type="submit" class="btn btn-info">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    $("#modalTitle").html("@ViewData["Title"]")
+
+    $("#form_delete").validate({
+        submitHandler: function (form) {
+            var id = $("#id").val()
+
+            $.ajax({
+                url: "/Role/SureDelete",
+                type: "post",
+                data: { id: id },
+                dataType: "json",
+                success: function (res) {
+                    var data = res.dataResponse
+
+                    if (data.success) {
+                        $("#my_modal").modal("hide")
+                        Toast.fire({
+                            icon: "success",
+                            title: data.message
+                        }).then(function () {
+                            window.location.reload()
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'warning',
+                            text: response.message
+                        })
+                    }
+                }
+                , error: function (res) {
+                    console.log(res)
+                }
+            })
+        }
+    })
+</script>

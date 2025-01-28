@@ -11,6 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<RoleService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
